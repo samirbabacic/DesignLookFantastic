@@ -32,5 +32,7 @@ namespace lookFantastic.Models
         }
 
         public System.Data.Entity.DbSet<lookFantastic.Models.FitnessCentres> FitnessCentres { get; set; }
+
+        public System.Data.Entity.DbSet<lookFantastic.Models.BeautySalons> BeautySalons { get; set; }
     }
 }
