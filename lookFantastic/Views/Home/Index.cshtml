@@ -1,0 +1,149 @@
+﻿@model lookFantastic.Models.Location
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+</head>
+<body>
+    <div>
+        <form>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="Berberi" value="berberi" name="filtriranje1" onclick="oznaciFitnes()">
+                <label class="form-check-label" for="Berberi">Hairdressers</label>
+                <input type="checkbox" class="form-check-input" id="Teretani" value="teretani" name="filtriranje2">
+                <label class="form-check-label" for="Teretani">Fitness Centres</label>
+                <input type="checkbox" class="form-check-input" id="SaloniZaUbavina" value="salonizaubavina" name="filtriranje3">
+                <label class="form-check-label" for="SaloniZaUbavina">Beauty Salons</label>
+                <input type="checkbox" class="form-check-input" id="Butici" value="butici" name="filtriranje4">
+                <label class="form-check-label" for="Butici">Clothing Shops</label>
+            </div>
+        </form>
+    </div>
+    <div id="map" style="width:1200px; height:700px; margin-left:auto; margin-right:auto; position:relative"></div>
+
+    @section scripts{
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="~/Scripts/jquery-3.4.1.js"></script>
+        <script>
+            // initialize Leaflet
+            var map = L.map('map').setView({ lon: 2.5749, lat: 48.8358 }, 10);
+
+            // add the OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+            }).addTo(map);
+
+            // show the scale bar on the lower left corner
+            L.control.scale().addTo(map);
+
+            $("#Berberi").change(function () {
+                if (this.checked) {
+                    oznaciBerbere();
+                }
+            });
+            $("#Teretani").change(function () {
+                if (this.checked) {
+                    oznaciFitnes();
+                }
+            });
+            $("#SaloniZaUbavina").change(function () {
+                if (this.checked) {
+                    oznaciSalone();
+                    console.log("saloniubavina");
+                }
+            });
+            $("#Butici").change(function () {
+                if (this.checked) {
+                    oznaciButike();
+                }
+            });
+            console.log(markers);
+            function onClickFitness(e) {
+                var location = this.getLatLng();
+                var latidue = location.lat;
+                var lognitude = location.lon;
+                $.ajax({
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].lat === latidue && data[i].lon.lognitude === lognitude) {
+                                console.log(data[i].name);
+                            }
+                        }
+
+                    }
+                });
+
+            }
+            function oznaciFitnes(){
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                          markers =  L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map).on('click', onClickFitness);
+                        }
+
+                    }
+                });
+            
+            }
+            function oznaciBerbere() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/HairDressers/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+
+                    }
+                });
+            }
+            function oznaciButike() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/ClothingShops/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+                    }
+                });
+            }
+            function oznaciSalone() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/BeautySalons/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+
+                    }
+                });
+            }
+        </script>
+    }
+</body>
+</html>
