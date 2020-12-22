@@ -1,0 +1,332 @@
+﻿@model lookFantastic.Models.Location
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: "Work Sanse",sans-serif;
+        }
+
+        .navlist {
+            display: inline-flex;
+            float: right;
+            list-style: none;
+            margin-right: 200px;
+            text-align: center;
+        }
+
+            .navlist li {
+                padding-right: 80px;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+                .navlist li:hover {
+                    background-color: #F7E3DE;
+                    transition: .2s;
+                }
+
+                .navlist li a {
+                    color: black;
+                    text-decoration: none;
+                }
+
+        .nav {
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+            width: 100%;
+            margin-top: 120px;
+            background-color: white;
+        }
+
+        .shadow {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: black;
+            top: 0;
+            left: 0;
+            z-index: 400;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            font-family: "Work sans",sans-serif;
+            background-color: white;
+            z-index: 10;
+        }
+
+        .submenu {
+            position: absolute;
+            margin-right: 15px;
+            list-style: none;
+            border: 1px solid #f7a193;
+            display: none;
+        }
+
+        .line {
+            border-top: 1px solid black;
+            margin-top: 35px;
+            background-color: white;
+        }
+
+        .loginLabel {
+            float: right;
+            margin-top: 45px;
+            margin-right: 70px;
+            font-size: 16px;
+        }
+
+        .container {
+            position: relative;
+            top: 100px;
+        }
+
+        .subList {
+            list-style: none;
+            display: inline-flex;
+        }
+
+       
+            .dialog{
+                z-index:20;
+                width:300px;
+                height:400px;
+                background-color:white;
+                opacity:0.8;
+                border:1px solid black;
+                position:absolute;
+                margin-top:230px;
+                left:-20px;
+            }
+            .label{
+                font-weight:400;
+            }
+    </style>
+</head>
+<body>
+    <div class=" navbar">
+        <div class="navbardef">
+            <div class="line">
+                <img style="width:180px;height:180px;position:absolute;top:15px;" src="~/logo_transparent.png" />
+                <div class="loginLabel">
+                    <div>
+                        <img style="width:20px;height:20px;position:absolute;right:170px;" src="https://www.pngitem.com/pimgs/m/150-1503941_user-windows-10-user-icon-png-transparent-png.png" />
+                    </div>
+                    <a style="text-decoration:none;color:black;" href="#">
+                        My Account
+                        <ul class="submenu">
+                            <li>List 1</li>
+                            <li>List 2</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+            <div class="nav">
+                <ul class="navlist">
+                    <ul class="navlist">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>
+                            @Html.ActionLink("Hairdressers", "Index", "Hairdressers")
+                            <ul id="sub" class="submenu">
+                                <li>Male</li>
+                                <li>Female</li>
+                            </ul>
+                        </li>
+                        <li style="">@Html.ActionLink("Beauty Salons", "Index", "BeautySalons")</li>
+                        <li>@Html.ActionLink("Clothing Shops", "Index", "ClothingShops")</li>
+                        <li>@Html.ActionLink("Fitness Centers", "Index", "FitnessCentres")</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="dialog">
+        <div class="dialogContent" style="position:relative;">
+            <div class="dropdownList1" style="text-align:center;margin-top:50px;">
+                <select style="width:200px;">
+                    <option value="" selected disabled hidden>Search by category</option>
+                    <option>Hairdressers</option>
+                    <option>Fitness Center</option>
+                    <option>Clothing Shops</option>
+                    <option>Beauty Salons</option>
+                </select>
+            </div>
+            <div class="dropdownList2" style="text-align:center;margin-top:50px;">
+                <input style="width:200px;" type="text" placeholder="Search by name" />
+            </div>
+            <div class="dropdownList3" style="text-align:center;margin-top:50px;">
+                <select style="width:200px;">
+                    <option value="" selected disabled hidden>Search by review</option>
+                    <option>*****</option>
+                    <option>****</option>
+                    <option>***</option>
+                    <option>**</option>
+                    <option>*</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form>
+            <div class="form-check" style="z-index: 600;position:absolute;top:450px;display:grid;">
+                <input type="checkbox" class="form-check-input" id="Berberi" value="berberi" name="filtriranje1" onclick="oznaciFitnes()">
+                <label class="form-check-label" for="Berberi" style="font-weight:400">Hairdressers</label>
+                <input type="checkbox" class="form-check-input" id="Teretani" value="teretani" name="filtriranje2">
+                <label class="form-check-label" for="Teretani" style="font-weight:400">Fitness Centres</label>
+                <input type="checkbox" class="form-check-input" id="SaloniZaUbavina" value="salonizaubavina" name="filtriranje3">
+                <label class="form-check-label" for="SaloniZaUbavina" style="font-weight:400">Beauty Salons</label>
+                <input type="checkbox" class="form-check-input" id="Butici" value="butici" name="filtriranje4">
+                <label class="form-check-label" for="Butici" style="font-weight:400">Clothing Shops</label>
+            </div>
+        </form>
+    </div>
+    <div id="map" style="width:1550px; height:700px;right:-200px;position:absolute;z-index:-10"></div>
+    @section scripts{
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="~/Scripts/jquery-3.4.1.js"></script>
+        <script>
+
+            // initialize Leaflet
+            var map = L.map('map').setView({ lon: 2.5749, lat: 48.8358 }, 10);
+
+            // add the OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+            }).addTo(map);
+
+            // show the scale bar on the lower left corner
+            L.control.scale().addTo(map);
+
+
+            var objekti = new Array();
+
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+                    }
+                });
+            });
+            $("#Berberi").change(function () {
+                if (this.checked) {
+                    oznaciBerbere();
+                }
+            });
+            $("#Teretani").change(function () {
+                if (this.checked) {
+                    oznaciFitnes();
+                }
+            });
+            $("#SaloniZaUbavina").change(function () {
+                if (this.checked) {
+                    oznaciSalone();
+                    console.log("saloniubavina");
+                }
+            });
+            $("#Butici").change(function () {
+                if (this.checked) {
+                    oznaciButike();
+                }
+            });
+            console.log(markers);
+            function onClickFitness(e) {
+                var location = this.getLatLng();
+                var latidue = location.lat;
+                var lognitude = location.lon;
+                $.ajax({
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].lat === latidue && data[i].lon.lognitude === lognitude) {
+                                console.log(data[i].name);
+                            }
+                        }
+
+                    }
+                });
+
+            }
+            function oznaciFitnes() {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map).on('click', onClickFitness);
+                        }
+
+                    }
+                });
+
+            }
+            function oznaciBerbere() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/HairDressers/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+
+                    }
+                });
+            }
+            function oznaciButike() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/ClothingShops/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+                    }
+                });
+            }
+            function oznaciSalone() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/BeautySalons/",
+                    data: "{}",
+
+                    success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
+                        }
+
+                    }
+                });
+            }
+        </script>
+    }
+</body>
+</html>
