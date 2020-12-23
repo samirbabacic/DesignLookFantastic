@@ -180,7 +180,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\BeautySalonsController.cs" />
+    <Compile Include="Controllers\Api\ClothingShopsController.cs" />
     <Compile Include="Controllers\Api\FitnessCentresController.cs" />
+    <Compile Include="Controllers\Api\HairDressersController.cs" />
     <Compile Include="Controllers\BeautySalonsController.cs" />
     <Compile Include="Controllers\ClothingShopsController.cs" />
     <Compile Include="Controllers\FitnessCentresController.cs" />

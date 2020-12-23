@@ -8,7 +8,35 @@
         body {
             font-family: "Work Sanse",sans-serif;
         }
+        .location {
+            z-index: 1000;
+            position: absolute;
+            margin-top: 100px;
+            right: -130px;
+            font-size: 13px;
+            padding-left: 8px;
+            font-family: "Work Sans",sans-serif;
+        }
 
+        #loc {
+            text-decoration: none;
+            color: black;
+            border: 1px solid black;
+            width: 150px;
+            color: black;
+            background-color: white;
+            opacity: 0.6;
+        }
+
+        #map {
+            position: fixed;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
         .navlist {
             display: inline-flex;
             float: right;
@@ -146,28 +174,23 @@
             </div>
         </div>
     </div>
+    <div class="location" style="">
+        <button id="loc" href="" style="">Show my location</button>
+    </div>
     <div class="dialog">
         <div class="dialogContent" style="position:relative;">
-            <div class="dropdownList1" style="text-align:center;margin-top:50px;">
-                <select style="width:200px;">
-                    <option value="" selected disabled hidden>Search by category</option>
-                    <option>Hairdressers</option>
-                    <option>Fitness Center</option>
-                    <option>Clothing Shops</option>
-                    <option>Beauty Salons</option>
-                </select>
-            </div>
+
             <div class="dropdownList2" style="text-align:center;margin-top:50px;">
-                <input style="width:200px;" type="text" placeholder="Search by name" />
+                <input style="width:200px;" type="text" id="nameSearch" placeholder="Search by name" />
             </div>
             <div class="dropdownList3" style="text-align:center;margin-top:50px;">
-                <select style="width:200px;">
+                <select style="width:200px;" id="dropL">
                     <option value="" selected disabled hidden>Search by review</option>
-                    <option>*****</option>
-                    <option>****</option>
-                    <option>***</option>
-                    <option>**</option>
-                    <option>*</option>
+                    <option value="5">*****</option>
+                    <option value="4">****</option>
+                    <option value="3">***</option>
+                    <option value="2">**</option>
+                    <option value="1">*</option>
                 </select>
             </div>
         </div>
@@ -175,7 +198,7 @@
     <div>
         <form>
             <div class="form-check" style="z-index: 600;position:absolute;top:450px;display:grid;">
-                <input type="checkbox" class="form-check-input" id="Berberi" value="berberi" name="filtriranje1" onclick="oznaciFitnes()">
+                <input type="checkbox" class="form-check-input" id="Berberi" value="berberi" name="filtriranje1">
                 <label class="form-check-label" for="Berberi" style="font-weight:400">Hairdressers</label>
                 <input type="checkbox" class="form-check-input" id="Teretani" value="teretani" name="filtriranje2">
                 <label class="form-check-label" for="Teretani" style="font-weight:400">Fitness Centres</label>
@@ -186,146 +209,216 @@
             </div>
         </form>
     </div>
-    <div id="map" style="width:1550px; height:700px;right:-200px;position:absolute;z-index:-10"></div>
+    <div id="map"></div>
     @section scripts{
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script src="~/Scripts/jquery-3.4.1.js"></script>
         <script>
 
-            // initialize Leaflet
             var map = L.map('map').setView({ lon: 2.5749, lat: 48.8358 }, 10);
 
-            // add the OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
             }).addTo(map);
 
-            // show the scale bar on the lower left corner
             L.control.scale().addTo(map);
 
-
-            var objekti = new Array();
-
-
-            $(document).ready(function () {
+            var markBerberi = function () {
+                var tmp = null;
                 $.ajax({
+                    'async': false,
                     type: "GET",
-                    url: "/api/FitnessCentres/",
+                    url: "/api/Hairdressers/",
                     data: "{}",
-
                     success: function (data) {
+                        tmp = data;
 
-                        for (var i = 0; i < data.length; i++) {
-                            L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
-                        }
                     }
                 });
-            });
+                return tmp;
+            }();
+
+
+            var markeriBerberi = [];
+            for (var i = 0; i < 100; i++) {
+                var LamMarker = new L.marker([markBerberi[i].lat, markBerberi[i].lon]).bindPopup(markBerberi[i].name).openPopup();
+                markeriBerberi.push(LamMarker);
+            }
             $("#Berberi").change(function () {
                 if (this.checked) {
-                    oznaciBerbere();
+                    for (var i = 0; i < 100; i++) {
+
+                        map.addLayer(markeriBerberi[i]);
+                    }
+                }
+                else {
+                    for (var i = 0; i < 100; i++) {
+                        map.removeLayer(markeriBerberi[i]);
+                    }
                 }
             });
+
+            var markTeretani = function () {
+                var tmp = null;
+                $.ajax({
+                    'async': false,
+                    type: "GET",
+                    url: "/api/FitnessCentres/",
+                    data: "{}",
+                    success: function (data) {
+                        tmp = data;
+
+                    }
+                });
+                return tmp;
+            }();
+            var markeriTeretani = [];
+            for (var i = 0; i < 100; i++) {
+                var LamMarker = new L.marker([markTeretani[i].lat, markTeretani[i].lon]).bindPopup(markTeretani[i].name).openPopup();
+                markeriTeretani.push(LamMarker);
+            }
             $("#Teretani").change(function () {
                 if (this.checked) {
-                    oznaciFitnes();
+                    for (var i = 0; i < 100; i++) {
+
+                        map.addLayer(markeriTeretani[i]);
+                    }
+                }
+                else {
+                    for (var i = 0; i < 100; i++) {
+                        map.removeLayer(markeriTeretani[i]);
+                    }
                 }
             });
-            $("#SaloniZaUbavina").change(function () {
-                if (this.checked) {
-                    oznaciSalone();
-                    console.log("saloniubavina");
-                }
-            });
-            $("#Butici").change(function () {
-                if (this.checked) {
-                    oznaciButike();
-                }
-            });
-            console.log(markers);
-            function onClickFitness(e) {
-                var location = this.getLatLng();
-                var latidue = location.lat;
-                var lognitude = location.lon;
+
+
+            var markSaloni = function () {
+                var tmp = null;
                 $.ajax({
-                    type: "GET",
-                    url: "/api/FitnessCentres/",
-                    data: "{}",
-
-                    success: function (data) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i].lat === latidue && data[i].lon.lognitude === lognitude) {
-                                console.log(data[i].name);
-                            }
-                        }
-
-                    }
-                });
-
-            }
-            function oznaciFitnes() {
-
-                $.ajax({
-                    type: "GET",
-                    url: "/api/FitnessCentres/",
-                    data: "{}",
-
-                    success: function (data) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map).on('click', onClickFitness);
-                        }
-
-                    }
-                });
-
-            }
-            function oznaciBerbere() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/HairDressers/",
-                    data: "{}",
-
-                    success: function (data) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
-                        }
-
-                    }
-                });
-            }
-            function oznaciButike() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/ClothingShops/",
-                    data: "{}",
-
-                    success: function (data) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
-                        }
-                    }
-                });
-            }
-            function oznaciSalone() {
-                $.ajax({
+                    'async': false,
                     type: "GET",
                     url: "/api/BeautySalons/",
                     data: "{}",
-
                     success: function (data) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            markers = L.marker({ lon: data[i].lon, lat: data[i].lat }).bindPopup(data[i].name).addTo(map);
-                        }
+                        tmp = data;
 
                     }
                 });
+                return tmp;
+            }();
+            var markeriSaloni = [];
+            for (var i = 0; i < 100; i++) {
+                var LamMarker = new L.marker([markSaloni[i].lat, markSaloni[i].lon]).bindPopup(markSaloni[i].name).openPopup();
+                markeriSaloni.push(LamMarker);
             }
+            $("#SaloniZaUbavina").change(function () {
+                if (this.checked) {
+                    for (var i = 0; i < 100; i++) {
+
+                        map.addLayer(markeriSaloni[i]);
+                    }
+                }
+                else {
+                    for (var i = 0; i < 100; i++) {
+                        map.removeLayer(markeriSaloni[i]);
+                    }
+                }
+            });
+
+
+            var markButici = function () {
+                var tmp = null;
+                $.ajax({
+                    'async': false,
+                    type: "GET",
+                    url: "/api/ClothingShops/",
+                    data: "{}",
+                    success: function (data) {
+                        tmp = data;
+
+                    }
+                });
+                return tmp;
+            }();
+            var markeriButici = [];
+            for (var i = 0; i < 100; i++) {
+                var LamMarker = new L.marker([markButici[i].lat, markButici[i].lon]).bindPopup(markButici[i].name).openPopup();
+                markeriButici.push(LamMarker);
+            }
+            $("#Butici").change(function () {
+                if (this.checked) {
+                    for (var i = 0; i < 100; i++) {
+
+                        map.addLayer(markeriButici[i]);
+                    }
+                }
+                else {
+                    for (var i = 0; i < 100; i++) {
+                        map.removeLayer(markeriButici[i]);
+                    }
+                }
+            });
+            var sveLokacije = markBerberi.concat(markButici, markSaloni, markTeretani);
+            var markerIme = [];
+            $('#nameSearch').keyup(function (e) {
+                if (typeof markerIme != 'undefined') {
+                    for (var i = 0; i < markerIme.length; i++) {
+                        map.removeLayer(markerIme[i]);
+                    }
+                    markerIme = [];
+                }
+                var ime = $('#nameSearch').val();
+                console.log(ime);
+                for (var i = 0; i < sveLokacije.length; i++) {
+                    if (sveLokacije[i].name === ime) {
+                        var markerI = new L.marker([sveLokacije[i].lat, sveLokacije[i].lon]).bindPopup(sveLokacije[i].name).openPopup();
+                        markerIme.push(markerI);
+                        map.addLayer(markerI);
+                    }
+
+                }
+
+            });
+            var markerOcena = [];
+            $("#dropL").change(function () {
+                if (typeof markerOcena != 'undefined') {
+                    for (var i = 0; i < markerOcena.length; i++) {
+                        map.removeLayer(markerOcena[i]);
+                    }
+                    markerOcena = [];
+                }
+                var ocena = $('#dropL option:selected').val();
+                if (ocena === 1) {
+                    for (var i = 0; i < sveLokacije.length; i++) {
+                        if (sveLokacije[i].averagegrade === 0) {
+                            var markerI = new L.marker([sveLokacije[i].lat, sveLokacije[i].lon]).bindPopup(sveLokacije[i].name).openPopup();
+                            markerOcena.push(markerI);
+                            map.addLayer(markerI);
+                        }
+                    }
+                }
+                for (var i = 0; i < sveLokacije.length; i++) {
+                    if (sveLokacije[i].averagegrade > ocena - 1 && sveLokacije[i].averagegrade <= ocena) {
+                        var markerI = new L.marker([sveLokacije[i].lat, sveLokacije[i].lon]).bindPopup(sveLokacije[i].name).openPopup();
+                        markerOcena.push(markerI);
+                        map.addLayer(markerI);
+                    }
+
+                }
+            });
+            $("#loc").on("click", function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        latit = position.coords.latitude;
+                        console.log(latit);
+                        longit = position.coords.longitude;
+                        console.log(longit);
+                        var abc = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+                        map.panTo(new L.LatLng(latit, longit));
+                    });
+                }
+            });
         </script>
     }
 </body>
