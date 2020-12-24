@@ -14,7 +14,7 @@ namespace lookFantastic.Controllers.Api
 {
     public class ClothingShopsController : ApiController
     {
-        private Model2 db = new Model2();
+        private Model3 db = new Model3();
 
         // GET: api/ClothingShops
         public IQueryable<ClothingShops> GetClothingShops()

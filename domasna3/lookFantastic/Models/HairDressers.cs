@@ -28,5 +28,9 @@ namespace lookFantastic.Models
         public int numbergrades { get; set; }
 
         public double averagegrade { get; set; }
+
+        [Required]
+        [StringLength(1)]
+        public string Tip { get; set; }
     }
 }

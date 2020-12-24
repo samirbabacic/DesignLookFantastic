@@ -10,11 +10,11 @@ namespace lookFantastic.Controllers
 {
     public class HomeController : Controller
     {
-        Model2 context;
+        Model3 context;
         
         public HomeController()
         {
-            context = new Model2();
+            context = new Model3();
         }
         protected override void Dispose(bool disposing)
         {

@@ -12,7 +12,7 @@ namespace lookFantastic.Controllers
 {
     public class ClothingShopsController : Controller
     {
-        private Model2 db = new Model2();
+        private Model3 db = new Model3();
 
         // GET: ClothingShops
         public ActionResult Index()
