@@ -10,11 +10,11 @@ namespace lookFantastic.Controllers
 {
     public class HomeController : Controller
     {
-        Model3 context;
+        Model5 context;
         
         public HomeController()
         {
-            context = new Model3();
+            context = new Model5();
         }
         protected override void Dispose(bool disposing)
         {
@@ -22,12 +22,8 @@ namespace lookFantastic.Controllers
         }
         public ActionResult Index()
         {
-            Location locations = new Location();
-            foreach(var hairdresser in context.HairDressers.ToList())
-            {
-                locations.HairDressers.Add(hairdresser);
-            }
-            return View(locations);
+            
+            return View();
         }
 
         public ActionResult About()

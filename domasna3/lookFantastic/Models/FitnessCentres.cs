@@ -32,5 +32,6 @@ namespace lookFantastic.Models
         [Required]
         [StringLength(1)]
         public string Tip { get; set; }
+
     }
 }

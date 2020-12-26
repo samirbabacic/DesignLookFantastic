@@ -1,4 +1,4 @@
-﻿@model IEnumerable<lookFantastic.Models.FitnessCentres>
+﻿@model IEnumerable<lookFantastic.Models.FitnessCentre>
 @{
     ViewBag.Title = "Index";
 
@@ -224,16 +224,8 @@
                 <div class="line">
                     <img style="width:180px;height:180px;position:absolute;top:15px;" src="~/logo_transparent.png" />
                     <div class="loginLabel">
-                        <div>
-                            <img style="width:20px;height:20px;position:absolute;right:170px;" src="https://www.pngitem.com/pimgs/m/150-1503941_user-windows-10-user-icon-png-transparent-png.png" />
-                        </div>
-                        <a style="text-decoration:none;color:black;" href="#">
-                            My Account
-                            <ul class="submenu">
-                                <li>List 1</li>
-                                <li>List 2</li>
-                            </ul>
-                        </a>
+                     
+                       
                     </div>
                 </div>
                 <div class="nav">
@@ -257,19 +249,19 @@
             <div class="column-left">
                 <div class="recommended">
                     <div class="title">
-                        <h3>Recommended by our users</h3>
+                        <h3>Recommended</h3>
                     </div>
                     <div class="imgR">
                         <img class="imgRec" src="https://zhofd1301faye.files.wordpress.com/2013/12/gal14.jpg" />
                     </div>
                     <div class="name">
-                        <h4>Ime</h4>
+                        <h4>Advertised Fitness Centre</h4>
                     </div>
                     <div class="review">
                         <img style="width:30%" src="~/Screenshot_16.png" />
                     </div>
                     <div class="promo">
-                        <h5 style="font-weight:600;">3 months membership fee for 50$, <a class="acc" style="color:black;" href="#">click for appointment</a></h5>
+                        <h5 style="font-weight:600;">3 months membership fee for 50$</h5>
                     </div>
                     <div class="contact">
                         <h5 style="padding-left:10px;padding-top:10px;">
@@ -280,14 +272,12 @@
                 </div>
             </div>
             <div class="barberWrap">
-                <div class="sort">
-                    <h5>Sort by review</h5>
-                </div>
+                
                 <ul style="list-style:none;" class="barberList">
                     @foreach (var item in Model)
                     {
                         <li>
-                            <h5 style="margin-left:550px;margin-top:40px;position:absolute;">13,550 reviews</h5>
+                            <h5 style="margin-left:550px;margin-top:40px;position:absolute;">@item.numbergrades reviews</h5>
                             <a href="#">
                                 <div class="listWrap" style="border-bottom:1px solid black;width:60%;">
                                     <ul class="subList">
@@ -299,7 +289,7 @@
                                         <li>
                                             <ul style="list-style:none;position:relative;right:35px;">
                                                 <li style="font-weight:bold">@item.name</li>
-                                                <li><img style="width:30%;height:30%;" src="~/Screenshot_16.png" /></li>
+                                                <li>Review Grade: @item.averagegrade</li>
                                                 <li style="">@item.addr_street</li>
                                                 <li style="font-size:12px;font-weight:300">Paris, France</li>
                                             </ul>

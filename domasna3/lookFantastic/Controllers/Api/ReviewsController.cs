@@ -12,44 +12,44 @@ using lookFantastic.Models;
 
 namespace lookFantastic.Controllers.Api
 {
-    public class HairDressersController : ApiController
+    public class ReviewsController : ApiController
     {
         private Model5 db = new Model5();
 
-        // GET: api/HairDressers
-        public IQueryable<HairDresser> GetHairDressers()
+        // GET: api/Reviews
+        public IQueryable<Review> GetReviews()
         {
-            return db.HairDressers;
+            return db.Reviews;
         }
 
-        // GET: api/HairDressers/5
-        [ResponseType(typeof(HairDresser))]
-        public IHttpActionResult GetHairDresser(long id)
+        // GET: api/Reviews/5
+        [ResponseType(typeof(Review))]
+        public IHttpActionResult GetReview(int id)
         {
-            HairDresser hairDresser = db.HairDressers.Find(id);
-            if (hairDresser == null)
+            Review review = db.Reviews.Find(id);
+            if (review == null)
             {
                 return NotFound();
             }
 
-            return Ok(hairDresser);
+            return Ok(review);
         }
 
-        // PUT: api/HairDressers/5
+        // PUT: api/Reviews/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutHairDresser(long id, HairDresser hairDresser)
+        public IHttpActionResult PutReview(int id, Review review)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != hairDresser.id)
+            if (id != review.id)
             {
                 return BadRequest();
             }
 
-            db.Entry(hairDresser).State = EntityState.Modified;
+            db.Entry(review).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HairDresserExists(id))
+                if (!ReviewExists(id))
                 {
                     return NotFound();
                 }
@@ -70,16 +70,16 @@ namespace lookFantastic.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/HairDressers
-        [ResponseType(typeof(HairDresser))]
-        public IHttpActionResult PostHairDresser(HairDresser hairDresser)
+        // POST: api/Reviews
+        [ResponseType(typeof(Review))]
+        public IHttpActionResult PostReview(Review review)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.HairDressers.Add(hairDresser);
+            db.Reviews.Add(review);
 
             try
             {
@@ -87,7 +87,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateException)
             {
-                if (HairDresserExists(hairDresser.id))
+                if (ReviewExists(review.id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace lookFantastic.Controllers.Api
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = hairDresser.id }, hairDresser);
+            return CreatedAtRoute("DefaultApi", new { id = review.id }, review);
         }
 
-        // DELETE: api/HairDressers/5
-        [ResponseType(typeof(HairDresser))]
-        public IHttpActionResult DeleteHairDresser(long id)
+        // DELETE: api/Reviews/5
+        [ResponseType(typeof(Review))]
+        public IHttpActionResult DeleteReview(int id)
         {
-            HairDresser hairDresser = db.HairDressers.Find(id);
-            if (hairDresser == null)
+            Review review = db.Reviews.Find(id);
+            if (review == null)
             {
                 return NotFound();
             }
 
-            db.HairDressers.Remove(hairDresser);
+            db.Reviews.Remove(review);
             db.SaveChanges();
 
-            return Ok(hairDresser);
+            return Ok(review);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,9 +125,9 @@ namespace lookFantastic.Controllers.Api
             base.Dispose(disposing);
         }
 
-        private bool HairDresserExists(long id)
+        private bool ReviewExists(int id)
         {
-            return db.HairDressers.Count(e => e.id == id) > 0;
+            return db.Reviews.Count(e => e.id == id) > 0;
         }
     }
 }

@@ -184,10 +184,11 @@
     <Compile Include="Controllers\Api\ClothingShopsController.cs" />
     <Compile Include="Controllers\Api\FitnessCentresController.cs" />
     <Compile Include="Controllers\Api\HairDressersController.cs" />
+    <Compile Include="Controllers\Api\ReviewsController.cs" />
     <Compile Include="Controllers\BeautySalonsController.cs" />
     <Compile Include="Controllers\ClothingShopsController.cs" />
     <Compile Include="Controllers\FitnessCentresController.cs" />
-    <Compile Include="Controllers\HairdressersController.cs" />
+    <Compile Include="Controllers\HairDressersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -199,22 +200,31 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetRole.cs" />
     <Compile Include="Models\AspNetRoles.cs" />
+    <Compile Include="Models\AspNetUser.cs" />
+    <Compile Include="Models\AspNetUserClaim.cs" />
     <Compile Include="Models\AspNetUserClaims.cs" />
+    <Compile Include="Models\AspNetUserLogin.cs" />
     <Compile Include="Models\AspNetUserLogins.cs" />
     <Compile Include="Models\AspNetUsers.cs" />
+    <Compile Include="Models\BeautySalon.cs" />
     <Compile Include="Models\BeautySalons.cs" />
+    <Compile Include="Models\ClothingShop.cs" />
     <Compile Include="Models\ClothingShops.cs" />
     <Compile Include="Models\C__MigrationHistory.cs" />
+    <Compile Include="Models\FitnessCentre.cs" />
     <Compile Include="Models\FitnessCentres.cs" />
-    <Compile Include="Models\Hairdresser.cs" />
+    <Compile Include="Models\HairDresser.cs" />
     <Compile Include="Models\HairDressers.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\Model3.cs" />
+    <Compile Include="Models\Model4.cs" />
+    <Compile Include="Models\Model5.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -230,6 +240,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\lookFantastic - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -290,7 +301,6 @@
     <Content Include="Views\FitnessCentres\Create.cshtml" />
     <Content Include="Views\FitnessCentres\Delete.cshtml" />
     <Content Include="Views\FitnessCentres\Details.cshtml" />
-    <Content Include="Views\FitnessCentres\Edit.cshtml" />
     <Content Include="Views\FitnessCentres\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

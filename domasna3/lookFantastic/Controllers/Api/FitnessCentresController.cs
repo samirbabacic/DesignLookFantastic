@@ -14,42 +14,42 @@ namespace lookFantastic.Controllers.Api
 {
     public class FitnessCentresController : ApiController
     {
-        private Model3 db = new Model3();
+        private Model5 db = new Model5();
 
         // GET: api/FitnessCentres
-        public IQueryable<FitnessCentres> GetFitnessCentres()
+        public IQueryable<FitnessCentre> GetFitnessCentres()
         {
             return db.FitnessCentres;
         }
 
         // GET: api/FitnessCentres/5
-        [ResponseType(typeof(FitnessCentres))]
-        public IHttpActionResult GetFitnessCentres(long id)
+        [ResponseType(typeof(FitnessCentre))]
+        public IHttpActionResult GetFitnessCentre(long id)
         {
-            FitnessCentres fitnessCentres = db.FitnessCentres.Find(id);
-            if (fitnessCentres == null)
+            FitnessCentre fitnessCentre = db.FitnessCentres.Find(id);
+            if (fitnessCentre == null)
             {
                 return NotFound();
             }
 
-            return Ok(fitnessCentres);
+            return Ok(fitnessCentre);
         }
 
         // PUT: api/FitnessCentres/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutFitnessCentres(long id, FitnessCentres fitnessCentres)
+        public IHttpActionResult PutFitnessCentre(long id, FitnessCentre fitnessCentre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != fitnessCentres.id)
+            if (id != fitnessCentre.id)
             {
                 return BadRequest();
             }
 
-            db.Entry(fitnessCentres).State = EntityState.Modified;
+            db.Entry(fitnessCentre).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FitnessCentresExists(id))
+                if (!FitnessCentreExists(id))
                 {
                     return NotFound();
                 }
@@ -71,15 +71,15 @@ namespace lookFantastic.Controllers.Api
         }
 
         // POST: api/FitnessCentres
-        [ResponseType(typeof(FitnessCentres))]
-        public IHttpActionResult PostFitnessCentres(FitnessCentres fitnessCentres)
+        [ResponseType(typeof(FitnessCentre))]
+        public IHttpActionResult PostFitnessCentre(FitnessCentre fitnessCentre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.FitnessCentres.Add(fitnessCentres);
+            db.FitnessCentres.Add(fitnessCentre);
 
             try
             {
@@ -87,7 +87,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateException)
             {
-                if (FitnessCentresExists(fitnessCentres.id))
+                if (FitnessCentreExists(fitnessCentre.id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace lookFantastic.Controllers.Api
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = fitnessCentres.id }, fitnessCentres);
+            return CreatedAtRoute("DefaultApi", new { id = fitnessCentre.id }, fitnessCentre);
         }
 
         // DELETE: api/FitnessCentres/5
-        [ResponseType(typeof(FitnessCentres))]
-        public IHttpActionResult DeleteFitnessCentres(long id)
+        [ResponseType(typeof(FitnessCentre))]
+        public IHttpActionResult DeleteFitnessCentre(long id)
         {
-            FitnessCentres fitnessCentres = db.FitnessCentres.Find(id);
-            if (fitnessCentres == null)
+            FitnessCentre fitnessCentre = db.FitnessCentres.Find(id);
+            if (fitnessCentre == null)
             {
                 return NotFound();
             }
 
-            db.FitnessCentres.Remove(fitnessCentres);
+            db.FitnessCentres.Remove(fitnessCentre);
             db.SaveChanges();
 
-            return Ok(fitnessCentres);
+            return Ok(fitnessCentre);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,7 +125,7 @@ namespace lookFantastic.Controllers.Api
             base.Dispose(disposing);
         }
 
-        private bool FitnessCentresExists(long id)
+        private bool FitnessCentreExists(long id)
         {
             return db.FitnessCentres.Count(e => e.id == id) > 0;
         }

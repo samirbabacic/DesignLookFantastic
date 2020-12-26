@@ -12,30 +12,22 @@ namespace lookFantastic.Controllers
 {
     public class ClothingShopsController : Controller
     {
-        private Model3 db = new Model3();
+        private Model5 db = new Model5();
 
         // GET: ClothingShops
         public ActionResult Index()
         {
-            List<ClothingShops> list = new List<ClothingShops>();
-            foreach (var model in db.ClothingShops.ToList())
-            {
-                if (model.name != null && model.addr_street != null)
-                {
-                    list.Add(model);
-                }
-            }
-            return View(list.ToList());
+            return View(db.ClothingShops.ToList());
         }
 
         // GET: ClothingShops/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClothingShops clothingShop = db.ClothingShops.Find(id);
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
             if (clothingShop == null)
             {
                 return HttpNotFound();
@@ -54,7 +46,7 @@ namespace lookFantastic.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,lon,lat,Name,ReviewGrade,NumberGrades")] ClothingShops clothingShop)
+        public ActionResult Create([Bind(Include = "id,lon,lat,name,opening_hours,website,addr_street,numbergrades,averagegrade,Tip")] ClothingShop clothingShop)
         {
             if (ModelState.IsValid)
             {
@@ -67,13 +59,13 @@ namespace lookFantastic.Controllers
         }
 
         // GET: ClothingShops/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClothingShops clothingShop = db.ClothingShops.Find(id);
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
             if (clothingShop == null)
             {
                 return HttpNotFound();
@@ -86,7 +78,7 @@ namespace lookFantastic.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,lon,lat,Name,ReviewGrade,NumberGrades")] ClothingShops clothingShop)
+        public ActionResult Edit([Bind(Include = "id,lon,lat,name,opening_hours,website,addr_street,numbergrades,averagegrade,Tip")] ClothingShop clothingShop)
         {
             if (ModelState.IsValid)
             {
@@ -98,13 +90,13 @@ namespace lookFantastic.Controllers
         }
 
         // GET: ClothingShops/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClothingShops clothingShop = db.ClothingShops.Find(id);
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
             if (clothingShop == null)
             {
                 return HttpNotFound();
@@ -115,9 +107,9 @@ namespace lookFantastic.Controllers
         // POST: ClothingShops/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(long id)
         {
-            ClothingShops clothingShop = db.ClothingShops.Find(id);
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
             db.ClothingShops.Remove(clothingShop);
             db.SaveChanges();
             return RedirectToAction("Index");

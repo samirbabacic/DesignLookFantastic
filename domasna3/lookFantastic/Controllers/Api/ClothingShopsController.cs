@@ -14,42 +14,42 @@ namespace lookFantastic.Controllers.Api
 {
     public class ClothingShopsController : ApiController
     {
-        private Model3 db = new Model3();
+        private Model5 db = new Model5();
 
         // GET: api/ClothingShops
-        public IQueryable<ClothingShops> GetClothingShops()
+        public IQueryable<ClothingShop> GetClothingShops()
         {
             return db.ClothingShops;
         }
 
         // GET: api/ClothingShops/5
-        [ResponseType(typeof(ClothingShops))]
-        public IHttpActionResult GetClothingShops(long id)
+        [ResponseType(typeof(ClothingShop))]
+        public IHttpActionResult GetClothingShop(long id)
         {
-            ClothingShops clothingShops = db.ClothingShops.Find(id);
-            if (clothingShops == null)
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
+            if (clothingShop == null)
             {
                 return NotFound();
             }
 
-            return Ok(clothingShops);
+            return Ok(clothingShop);
         }
 
         // PUT: api/ClothingShops/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutClothingShops(long id, ClothingShops clothingShops)
+        public IHttpActionResult PutClothingShop(long id, ClothingShop clothingShop)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != clothingShops.id)
+            if (id != clothingShop.id)
             {
                 return BadRequest();
             }
 
-            db.Entry(clothingShops).State = EntityState.Modified;
+            db.Entry(clothingShop).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClothingShopsExists(id))
+                if (!ClothingShopExists(id))
                 {
                     return NotFound();
                 }
@@ -71,15 +71,15 @@ namespace lookFantastic.Controllers.Api
         }
 
         // POST: api/ClothingShops
-        [ResponseType(typeof(ClothingShops))]
-        public IHttpActionResult PostClothingShops(ClothingShops clothingShops)
+        [ResponseType(typeof(ClothingShop))]
+        public IHttpActionResult PostClothingShop(ClothingShop clothingShop)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.ClothingShops.Add(clothingShops);
+            db.ClothingShops.Add(clothingShop);
 
             try
             {
@@ -87,7 +87,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateException)
             {
-                if (ClothingShopsExists(clothingShops.id))
+                if (ClothingShopExists(clothingShop.id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace lookFantastic.Controllers.Api
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = clothingShops.id }, clothingShops);
+            return CreatedAtRoute("DefaultApi", new { id = clothingShop.id }, clothingShop);
         }
 
         // DELETE: api/ClothingShops/5
-        [ResponseType(typeof(ClothingShops))]
-        public IHttpActionResult DeleteClothingShops(long id)
+        [ResponseType(typeof(ClothingShop))]
+        public IHttpActionResult DeleteClothingShop(long id)
         {
-            ClothingShops clothingShops = db.ClothingShops.Find(id);
-            if (clothingShops == null)
+            ClothingShop clothingShop = db.ClothingShops.Find(id);
+            if (clothingShop == null)
             {
                 return NotFound();
             }
 
-            db.ClothingShops.Remove(clothingShops);
+            db.ClothingShops.Remove(clothingShop);
             db.SaveChanges();
 
-            return Ok(clothingShops);
+            return Ok(clothingShop);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,7 +125,7 @@ namespace lookFantastic.Controllers.Api
             base.Dispose(disposing);
         }
 
-        private bool ClothingShopsExists(long id)
+        private bool ClothingShopExists(long id)
         {
             return db.ClothingShops.Count(e => e.id == id) > 0;
         }

@@ -14,42 +14,42 @@ namespace lookFantastic.Controllers.Api
 {
     public class BeautySalonsController : ApiController
     {
-        private Model3 db = new Model3();
+        private Model5 db = new Model5();
 
         // GET: api/BeautySalons
-        public IQueryable<BeautySalons> GetBeautySalons()
+        public IQueryable<BeautySalon> GetBeautySalons()
         {
             return db.BeautySalons;
         }
 
         // GET: api/BeautySalons/5
-        [ResponseType(typeof(BeautySalons))]
-        public IHttpActionResult GetBeautySalons(long id)
+        [ResponseType(typeof(BeautySalon))]
+        public IHttpActionResult GetBeautySalon(long id)
         {
-            BeautySalons beautySalons = db.BeautySalons.Find(id);
-            if (beautySalons == null)
+            BeautySalon beautySalon = db.BeautySalons.Find(id);
+            if (beautySalon == null)
             {
                 return NotFound();
             }
 
-            return Ok(beautySalons);
+            return Ok(beautySalon);
         }
 
         // PUT: api/BeautySalons/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutBeautySalons(long id, BeautySalons beautySalons)
+        public IHttpActionResult PutBeautySalon(long id, BeautySalon beautySalon)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != beautySalons.id)
+            if (id != beautySalon.id)
             {
                 return BadRequest();
             }
 
-            db.Entry(beautySalons).State = EntityState.Modified;
+            db.Entry(beautySalon).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BeautySalonsExists(id))
+                if (!BeautySalonExists(id))
                 {
                     return NotFound();
                 }
@@ -71,15 +71,15 @@ namespace lookFantastic.Controllers.Api
         }
 
         // POST: api/BeautySalons
-        [ResponseType(typeof(BeautySalons))]
-        public IHttpActionResult PostBeautySalons(BeautySalons beautySalons)
+        [ResponseType(typeof(BeautySalon))]
+        public IHttpActionResult PostBeautySalon(BeautySalon beautySalon)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.BeautySalons.Add(beautySalons);
+            db.BeautySalons.Add(beautySalon);
 
             try
             {
@@ -87,7 +87,7 @@ namespace lookFantastic.Controllers.Api
             }
             catch (DbUpdateException)
             {
-                if (BeautySalonsExists(beautySalons.id))
+                if (BeautySalonExists(beautySalon.id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace lookFantastic.Controllers.Api
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = beautySalons.id }, beautySalons);
+            return CreatedAtRoute("DefaultApi", new { id = beautySalon.id }, beautySalon);
         }
 
         // DELETE: api/BeautySalons/5
-        [ResponseType(typeof(BeautySalons))]
-        public IHttpActionResult DeleteBeautySalons(long id)
+        [ResponseType(typeof(BeautySalon))]
+        public IHttpActionResult DeleteBeautySalon(long id)
         {
-            BeautySalons beautySalons = db.BeautySalons.Find(id);
-            if (beautySalons == null)
+            BeautySalon beautySalon = db.BeautySalons.Find(id);
+            if (beautySalon == null)
             {
                 return NotFound();
             }
 
-            db.BeautySalons.Remove(beautySalons);
+            db.BeautySalons.Remove(beautySalon);
             db.SaveChanges();
 
-            return Ok(beautySalons);
+            return Ok(beautySalon);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,7 +125,7 @@ namespace lookFantastic.Controllers.Api
             base.Dispose(disposing);
         }
 
-        private bool BeautySalonsExists(long id)
+        private bool BeautySalonExists(long id)
         {
             return db.BeautySalons.Count(e => e.id == id) > 0;
         }

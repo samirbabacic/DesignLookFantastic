@@ -1,19 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-
 namespace lookFantastic.Models
 {
-    public class Hairdresser
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class HairDresser
     {
-        [Key]
-        public int Id { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public HairDresser()
+        {
+            Reviews = new HashSet<Review>();
+        }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long id { get; set; }
+
         public double lon { get; set; }
+
         public double lat { get; set; }
-        public string Name { get; set; }
-        public float ReviewGrade { get; set; }
-        public int NumberGrades { get; set; }
+
+        public string name { get; set; }
+
+        public string opening_hours { get; set; }
+
+        public string website { get; set; }
+
+        public string phone { get; set; }
+
+        public string addr_street { get; set; }
+
+        public int numbergrades { get; set; }
+
+        public double averagegrade { get; set; }
+
+        [Required]
+        [StringLength(1)]
+        public string Tip { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

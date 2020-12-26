@@ -1,5 +1,4 @@
-﻿@model lookFantastic.Models.Location
-<html lang="en">
+﻿<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -153,16 +152,7 @@
             <div class="line">
                 <img style="width:180px;height:180px;position:absolute;top:15px;" src="~/logo_transparent.png" />
                 <div class="loginLabel">
-                    <div>
-                        <img style="width:20px;height:20px;position:absolute;right:170px;" src="https://www.pngitem.com/pimgs/m/150-1503941_user-windows-10-user-icon-png-transparent-png.png" />
-                    </div>
-                    <a style="text-decoration:none;color:black;" href="#">
-                        My Account
-                        <ul class="submenu">
-                            <li>List 1</li>
-                            <li>List 2</li>
-                        </ul>
-                    </a>
+
                 </div>
             </div>
             <div class="nav">
@@ -195,7 +185,7 @@
             </div>
             <div class="dropdownList3" style="text-align:center;margin-top:50px;">
                 <select style="width:200px;" id="dropL">
-                    <option value="" selected disabled hidden>Search by review</option>
+                    <option value="11" selected>Search by review</option>
                     <option value="5">*****</option>
                     <option value="4">****</option>
                     <option value="3">***</option>
@@ -217,13 +207,18 @@
                 <option value="2">**</option>
                 <option value="1">*</option>
             </select>
-            <textarea name="message" rows="6" style="resize:none; margin-top:50px;" placeholder="Enter a comment: "></textarea>
+            <textarea id="komentar" name="message" rows="6" style="resize:none; margin-top:50px;" placeholder="Enter a comment: "></textarea>
             <div id="idLokacija" style="display:none;"></div>
             <div id="tip" style="display:none;"></div>
             <button id="btnReview" style="position: relative; top:30px">Add review</button>
         </div>
     </div>
+    <div id="selectDialog">
+    </div>
+    <div id="dialogKomentari">
+    </div>
     <div>
+
         <form>
             <div class="form-check" style="z-index: 600;position:absolute;top:450px;display:grid;">
                 <input type="checkbox" class="form-check-input" id="Berberi" value="berberi" name="filtriranje1">
@@ -247,7 +242,6 @@
 
 
         <script>
-            var originalContent;
 
             $(document).ready(function () {
                 $('#dialogOcenivanje').dialog({
@@ -257,8 +251,9 @@
                     height: 500,
 
                 });
+                
             });
-           
+
             var map = L.map('map').setView({ lon: 2.5749, lat: 48.8358 }, 10);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -287,8 +282,28 @@
 
                 var tip = $('#tip').html();
                 var idL = $('#idLokacija').html();
+                var comment = $('#komentar').val();
+                var ime = $('#nameReview').val();
+                var reviews = function () {
+                    var tmp = null;
+                    $.ajax({
+                        'async': false,
+                        type: "GET",
+                        url: "/api/Reviews/",
+                        data: "{}",
+                        success: function (data) {
+                            tmp = data;
+                        }
+                    });
+                    return tmp;
+                }();
+                var reviewNumber = reviews.length;
+                var idN = reviews[reviewNumber - 1].id + 1;
+                console.log(reviewNumber);
+                console.log(ime);
+                console.log(komentar);
                 console.log(tip);
-                if (tip === 'B') {
+                if (tip === 'S') {
                     var markButik = function () {
                         var tmp = null;
                         $.ajax({
@@ -304,53 +319,89 @@
                     }();
 
                     var selektirana = $('#dropdownOcena option:selected').val();
+                    var review = {
+                        id: idN,
+                        name: ime,
+                        komentar: comment,
+                        grade: selektirana,
+                        id_clothingshop: idL,
+                    };
+                    console.log(ime);
+                    console.log(komentar);
                     markButik.numbergrades = markButik.numbergrades + 1;
                     var avg = (markButik.averagegrade * (markButik.numbergrades - 1));
                     avg = avg + parseInt(selektirana);
                     avg = avg / markButik.numbergrades;
                     markButik.averagegrade = avg;
+
                     $.ajax({
                         url: '/api/ClothingShops/' + idL,
                         type: 'PUT',
                         contentType: "application/json",
                         data: JSON.stringify(markButik),
+                        success: function (data) { },
+                        complete: function () {
+                            $.ajax({
+                                url: '/api/Reviews/',
+                                type: 'POST',
+                                contentType: "application/json",
+                                data: JSON.stringify(review),
+                                success: function (data) {
+                                    alert("You successfully reviewed the location")
+                                }
+                            });
+
+                        }
+                    });
+
+                }
+                else if (tip == 'F') {
+
+                    var markTeretana = function () {
+                        var tmp = null;
+                        $.ajax({
+                            'async': false,
+                            type: "GET",
+                            url: "/api/FitnessCentres/" + idL,
+                            data: "{}",
+                            success: function (data) {
+                                tmp = data;
+                            }
+                        });
+                        return tmp;
+                    }();
+
+                    var selektirana = $('#dropdownOcena option:selected').val();
+                    markTeretana.numbergrades = markTeretana.numbergrades + 1;
+                    var avg = (markTeretana.averagegrade * (markTeretana.numbergrades - 1));
+                    avg = avg + parseInt(selektirana);
+                    avg = avg / markTeretana.numbergrades;
+                    markTeretana.averagegrade = avg;
+                    var review = {
+                        id: idN,
+                        name: ime,
+                        komentar: comment,
+                        grade: selektirana,
+                        id_fitnesscentre: idL,
+                    };
+                    $.ajax({
+                        url: '/api/FitnessCentres/' + idL,
+                        type: 'PUT',
+                        contentType: "application/json",
+                        data: JSON.stringify(markTeretana),
                         success: function (data) {
-                            alert("Uspesno vnesovte ocena za butikot");
+                            $.ajax({
+                                url: '/api/Reviews/',
+                                type: 'POST',
+                                contentType: "application/json",
+                                data: JSON.stringify(review),
+                                success: function (data) {
+                                    alert("You successfully reviewed the location")
+                                }
+                            });
                         }
                     });
                 }
-                else if (tip == 'F') {
-                  
-                        var markTeretana = function () {
-                            var tmp = null;
-                            $.ajax({
-                                'async': false,
-                                type: "GET",
-                                url: "/api/FitnessCentres/" + idL,
-                                data: "{}",
-                                success: function (data) {
-                                    tmp = data;
-                                }
-                            });
-                            return tmp;
-                        }();
-
-                        var selektirana = $('#dropdownOcena option:selected').val();
-                    markTeretana.numbergrades = markTeretana.numbergrades + 1;
-                    var avg = (markTeretana.averagegrade * (markTeretana.numbergrades - 1));
-                        avg = avg + parseInt(selektirana);
-                    avg = avg / markTeretana.numbergrades;
-                    markTeretana.averagegrade = avg;
-                        $.ajax({
-                            url: '/api/FitnessCentres/' + idL,
-                            type: 'PUT',
-                            contentType: "application/json",
-                            data: JSON.stringify(markTeretana),
-                            success: function (data) {
-                                alert("Uspesno vnesovte ocena za fitness centarot");
-                            }
-                        });
-                    }
                 else if (tip == 'H') {
 
                     var markFrizer = function () {
@@ -373,17 +424,32 @@
                     avg = avg + parseInt(selektirana);
                     avg = avg / markFrizer.numbergrades;
                     markFrizer.averagegrade = avg;
+                    var review = {
+                        id: idN,
+                        name: ime,
+                        komentar: comment,
+                        grade: selektirana,
+                        id_hairdresser: idL,
+                    };
                     $.ajax({
                         url: '/api/Hairdressers/' + idL,
                         type: 'PUT',
                         contentType: "application/json",
                         data: JSON.stringify(markFrizer),
                         success: function (data) {
-                            alert("Uspesno vnesovte ocena za frizerskiot salon");
+                            $.ajax({
+                                url: '/api/Reviews/',
+                                type: 'POST',
+                                contentType: "application/json",
+                                data: JSON.stringify(review),
+                                success: function (data) {
+                                    alert("You successfully reviewed the location")
+                                }
+                            });
                         }
                     });
                 }
-                else if (tip == 'S') {
+                else if (tip == 'B') {
 
                     var beautySalon = function () {
                         var tmp = null;
@@ -405,67 +471,408 @@
                     avg = avg + parseInt(selektirana);
                     avg = avg / beautySalon.numbergrades;
                     beautySalon.averagegrade = avg;
+                    var review = {
+                        id: idN,
+                        name: ime,
+                        komentar: comment,
+                        grade: selektirana,
+                        id_beautysalon: idL,
+                    };
                     $.ajax({
                         url: '/api/BeautySalons/' + idL,
                         type: 'PUT',
                         contentType: "application/json",
                         data: JSON.stringify(beautySalon),
                         success: function (data) {
-                            alert("Uspesno vnesovte ocena za salonot za ubavina");
+                            $.ajax({
+                                url: '/api/Reviews/',
+                                type: 'POST',
+                                contentType: "application/json",
+                                data: JSON.stringify(review),
+                                success: function (data) {
+                                    alert("You successfully reviewed the location")
+                                }
+                            });
                         }
                     });
                 }
             })
             function findBerber(i) {
                 return function () {
-                    $('#dialogOcenivanje').dialog({
+                    var idM = markBerberi[i].id;
+                    $('#selectDialog').dialog({
+                        title: "Choose what you want?!",
                         autoOpen: true,
-                        title: markBerberi[i].name
+                        modal: true,
+                        buttons: {
+                            "Give a review": function () {
+                                $('#dialogOcenivanje').dialog({
+                                    autoOpen: true,
+                                    title: markBerberi[i].name
+                                });
+                                $('#tip').html('H');
+                                $('#idLokacija').html(markBerberi[i].id)
+                            },
+                            "View reviews for locations": function () {
+                                var markFrizer = function () {
+                                    var tmp = null;
+                                    $.ajax({
+                                        'async': false,
+                                        type: "GET",
+                                        url: "/api/HairDressers/" + idM,
+                                        data: "{}",
+                                        success: function (data) {
+                                            tmp = data;
+                                        }
+                                    });
+                                    return tmp;
+                                }();
+                                $('#dialogKomentari').empty();
+                                var numReviews = markFrizer.Reviews.length;
+                                if (numReviews != 0) {
+                                    for (var i = 0; i < numReviews; i++) {
+                                        $('#dialogKomentari').append('<div> Ime:' + markFrizer.Reviews[i].name + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Ocena:' + markFrizer.Reviews[i].grade + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Komentar:' + markFrizer.Reviews[i].komentar + '</div> <br> <br>')
+                                    }
+                                }
+                                $('#dialogKomentari').dialog({
+                                    autoOpen: true
+                                });
+                            }
+                        }
                     });
-                    $('#tip').html('H');
-                    $('#idLokacija').html(markBerberi[i].id)
-                };
+                }
             }
-                function findTeretana(i) {
-                    return function () {
-                        $('#dialogOcenivanje').dialog({
-                            autoOpen: true,
-                            title: markTeretani[i].name
-                        });
-                        $('#tip').html('F');
-                        $('#idLokacija').html(markTeretani[i].id)
-                    };
+            function findTeretana(i) {
+                
+                return function () {
+                    var idM = markTeretani[i].id;
+                    $('#selectDialog').dialog({
+                        title: "Choose what you want?!",
+                        autoOpen: true,
+                        modal: true,
+                        buttons: {
+                            "Give a review": function () {
+                                $('#dialogOcenivanje').dialog({
+                                    autoOpen: true,
+                                    title: markTeretani[i].name
+                                });
+                                $('#tip').html('F');
+                                $('#idLokacija').html(markTeretani[i].id)
+                            },
+                            "View reviews for locations": function () {
+                                var markTeretana = function () {
+                                    var tmp = null;
+                                    $.ajax({
+                                        'async': false,
+                                        type: "GET",
+                                        url: "/api/FitnessCentres/" + idM,
+                                        data: "{}",
+                                        success: function (data) {
+                                            tmp = data;
+                                        }
+                                    });
+                                    return tmp;
+                                }();
+                                $('#dialogKomentari').empty();
+                                var numReviews = markTeretana.Reviews.length;
+                                if (numReviews != 0) {
+                                    for (var i = 0; i < numReviews; i++) {
+                                        $('#dialogKomentari').append('<div> Ime:' + markTeretana.Reviews[i].name + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Ocena:' + markTeretana.Reviews[i].grade + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Komentar:' + markTeretana.Reviews[i].komentar + '</div> <br> <br>')
+                                    }
+                                }
+                                $('#dialogKomentari').dialog({
+                                    autoOpen:true
+                                });
+                            }
+                        }
+                    });         
+                }
             }
             function findSaloni(i) {
+
                 return function () {
-                    $('#dialogOcenivanje').dialog({
+                    var idM = markSaloni[i].id;
+                    $('#selectDialog').dialog({
+                        title: "Choose what you want?!",
                         autoOpen: true,
-                        title: markSaloni[i].name
+                        modal: true,
+                        buttons: {
+                            "Give a review": function () {
+                                $('#dialogOcenivanje').dialog({
+                                    autoOpen: true,
+                                    title: markSaloni[i].name
+                                });
+                                $('#tip').html('B');
+                                $('#idLokacija').html(markSaloni[i].id)
+                            },
+                            "View reviews for locations": function () {
+                                var markSalon = function () {
+                                    var tmp = null;
+                                    $.ajax({
+                                        'async': false,
+                                        type: "GET",
+                                        url: "/api/BeautySalons/" + idM,
+                                        data: "{}",
+                                        success: function (data) {
+                                            tmp = data;
+                                        }
+                                    });
+                                    return tmp;
+                                }();
+                                $('#dialogKomentari').empty();
+                                var numReviews = markSalon.Reviews.length;
+                                if (numReviews != 0) {
+                                    for (var i = 0; i < numReviews; i++) {
+                                        $('#dialogKomentari').append('<div> Ime:' + markSalon.Reviews[i].name + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Ocena:' + markSalon.Reviews[i].grade + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Komentar:' + markSalon.Reviews[i].komentar + '</div> <br> <br>')
+                                    }
+                                }
+                                $('#dialogKomentari').dialog({
+                                    autoOpen: true
+                                });
+                            }
+                        }
                     });
-                    $('#tip').html('S');
-                    $('#idLokacija').html(markSaloni[i].id)
-                };
+                }
             }
             function findButici(i) {
                 return function () {
-                    $('#dialogOcenivanje').dialog({
+                    var idM = markButici[i].id;
+                    $('#selectDialog').dialog({
+                        title: "Choose what you want?!",
                         autoOpen: true,
-                        title: markButici[i].name
+                        modal: true,
+                        buttons: {
+                            "Give a review": function () {
+                                $('#dialogOcenivanje').dialog({
+                                    autoOpen: true,
+                                    title: markButici[i].name
+                                });
+                                $('#tip').html('S');
+                                $('#idLokacija').html(markButici[i].id)
+                            },
+                            "View reviews for locations": function () {
+                                var markButik = function () {
+                                    var tmp = null;
+                                    $.ajax({
+                                        'async': false,
+                                        type: "GET",
+                                        url: "/api/ClothingShops/" + idM,
+                                        data: "{}",
+                                        success: function (data) {
+                                            tmp = data;
+                                        }
+                                    });
+                                    return tmp;
+                                }();
+                                $('#dialogKomentari').empty();
+                                var numReviews = markButik.Reviews.length;
+                                if (numReviews != 0) {
+                                    for (var i = 0; i < numReviews; i++) {
+                                        $('#dialogKomentari').append('<div> Ime:' + markButik.Reviews[i].name + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Ocena:' + markButik.Reviews[i].grade + '</div> <br>')
+                                        $('#dialogKomentari').append('<div> Komentar:' + markButik.Reviews[i].komentar + '</div> <br> <br>')
+                                    }
+                                }
+                                $('#dialogKomentari').dialog({
+                                    autoOpen: true
+                                });
+                            }
+                        }
                     });
-                    $('#tip').html('B');
-                    $('#idLokacija').html(markButici[i].id)
-                };
+                }
             }
             function findSve(i) {
                 return function () {
-                    $('#dialogOcenivanje').dialog({
-                        autoOpen: true,
-                        title: sveLokacije[i].name
-                    });
+                    
                     $('#idLokacija').html(sveLokacije[i].id)
                     console.log(sveLokacije[i].Tip);
                     $('#tip').html(sveLokacije[i].Tip);
-                };
+                    var idM = sveLokacije[i].id;
+
+                    var tip = sveLokacije[i].Tip;
+                    if (tip === 'H') {
+                        $('#selectDialog').dialog({
+                            title: "Choose what you want?!",
+                            autoOpen: true,
+                            modal: true,
+                            buttons: {
+                                "Give a review": function () {
+                                    $('#dialogOcenivanje').dialog({
+                                        autoOpen: true,
+                                        title: sveLokacije[i].name
+                                    });
+                                    $('#tip').html('H');
+                                    $('#idLokacija').html(sveLokacije[i].id)
+                                },
+                                "View reviews for locations": function () {
+                                    var markFrizer = function () {
+                                        var tmp = null;
+                                        $.ajax({
+                                            'async': false,
+                                            type: "GET",
+                                            url: "/api/HairDressers/" + idM,
+                                            data: "{}",
+                                            success: function (data) {
+                                                tmp = data;
+                                            }
+                                        });
+                                        return tmp;
+                                    }();
+                                    $('#dialogKomentari').empty();
+                                    var numReviews = markFrizer.Reviews.length;
+                                    if (numReviews != 0) {
+                                        for (var i = 0; i < numReviews; i++) {
+                                            $('#dialogKomentari').append('<div> Ime:' + markFrizer.Reviews[i].name + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Ocena:' + markFrizer.Reviews[i].grade + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Komentar:' + markFrizer.Reviews[i].komentar + '</div> <br> <br>')
+                                        }
+                                    }
+                                    $('#dialogKomentari').dialog({
+                                        autoOpen: true
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                    else if (tip === 'S') {
+                        $('#selectDialog').dialog({
+                            title: "Choose what you want?!",
+                            autoOpen: true,
+                            modal: true,
+                            buttons: {
+                                "Give a review": function () {
+                                    $('#dialogOcenivanje').dialog({
+                                        autoOpen: true,
+                                        title: sveLokacije[i].name
+                                    });
+                                    $('#tip').html('S');
+                                    $('#idLokacija').html(sveLokacije[i].id)
+                                },
+                                "View reviews for locations": function () {
+                                    var markButik = function () {
+                                        var tmp = null;
+                                        $.ajax({
+                                            'async': false,
+                                            type: "GET",
+                                            url: "/api/ClothingShops/" + idM,
+                                            data: "{}",
+                                            success: function (data) {
+                                                tmp = data;
+                                            }
+                                        });
+                                        return tmp;
+                                    }();
+                                    $('#dialogKomentari').empty();
+                                    var numReviews = markButik.Reviews.length;
+                                    if (numReviews != 0) {
+                                        for (var i = 0; i < numReviews; i++) {
+                                            $('#dialogKomentari').append('<div> Ime:' + markButik.Reviews[i].name + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Ocena:' + markButik.Reviews[i].grade + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Komentar:' + markButik.Reviews[i].komentar + '</div> <br> <br>')
+                                        }
+                                    }
+                                    $('#dialogKomentari').dialog({
+                                        autoOpen: true
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else if (tip === 'B') {
+                        $('#selectDialog').dialog({
+                            title: "Choose what you want?!",
+                            autoOpen: true,
+                            modal: true,
+                            buttons: {
+                                "Give a review": function () {
+                                    $('#dialogOcenivanje').dialog({
+                                        autoOpen: true,
+                                        title: sveLokacije[i].name
+                                    });
+                                    $('#tip').html('B');
+                                },
+                                "View reviews for locations": function () {
+                                    var markSalon = function () {
+                                        var tmp = null;
+                                        $.ajax({
+                                            'async': false,
+                                            type: "GET",
+                                            url: "/api/BeautySalons/" + idM,
+                                            data: "{}",
+                                            success: function (data) {
+                                                tmp = data;
+                                            }
+                                        });
+                                        return tmp;
+                                    }();
+                                    $('#dialogKomentari').empty();
+                                    var numReviews = markSalon.Reviews.length;
+                                    if (numReviews != 0) {
+                                        for (var i = 0; i < numReviews; i++) {
+                                            $('#dialogKomentari').append('<div> Ime:' + markSalon.Reviews[i].name + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Ocena:' + markSalon.Reviews[i].grade + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Komentar:' + markSalon.Reviews[i].komentar + '</div> <br> <br>')
+                                        }
+                                    }
+                                    $('#dialogKomentari').dialog({
+                                        autoOpen: true
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else if (tip === 'F') {
+                        $('#selectDialog').dialog({
+                            title: "Choose what you want?!",
+                            autoOpen: true,
+                            modal: true,
+                            buttons: {
+                                "Give a review": function () {
+                                    $('#dialogOcenivanje').dialog({
+                                        autoOpen: true,
+                                        title: sveLokacije[i].name
+                                    });
+                                    $('#tip').html('F');
+                                    $('#idLokacija').html(sveLokacije[i].id)
+                                },
+                                "View reviews for locations": function () {
+                                    var markTeretana = function () {
+                                        var tmp = null;
+                                        $.ajax({
+                                            'async': false,
+                                            type: "GET",
+                                            url: "/api/FitnessCentres/" + idM,
+                                            data: "{}",
+                                            success: function (data) {
+                                                tmp = data;
+                                            }
+                                        });
+                                        return tmp;
+                                    }();
+                                    $('#dialogKomentari').empty();
+                                    var numReviews = markTeretana.Reviews.length;
+                                    if (numReviews != 0) {
+                                        for (var i = 0; i < numReviews; i++) {
+                                            $('#dialogKomentari').append('<div> Ime:' + markTeretana.Reviews[i].name + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Ocena:' + markTeretana.Reviews[i].grade + '</div> <br>')
+                                            $('#dialogKomentari').append('<div> Komentar:' + markTeretana.Reviews[i].komentar + '</div> <br> <br>')
+                                        }
+                                    }
+                                    $('#dialogKomentari').dialog({
+                                        autoOpen: true
+                                    });
+                                }
+                            }
+                        });         
+                    }
+                }
             }
             var markeriBerberi = [];
             for (var i = 0; i < 100; i++) {
@@ -608,7 +1015,7 @@
                 }
 
             });
-            
+
             var markerOcena = [];
             $("#dropL").change(function () {
                 if (typeof markerOcena != 'undefined') {
@@ -618,10 +1025,16 @@
                     markerOcena = [];
                 }
                 var ocena = $('#dropL option:selected').val();
+                if (ocena === 11) {
+                    for (var i = 0; i < markerOcena.length; i++) {
+                        map.removeLayer(markerOcena[i]);
+                    }
+                    markerOcena = [];
+                }
                 for (var i = 0; i < sveLokacije.length; i++) {
                     if (sveLokacije[i].averagegrade > ocena - 1 && sveLokacije[i].averagegrade <= ocena) {
                         var markerI = new L.marker([sveLokacije[i].lat, sveLokacije[i].lon]).on('click', findSve(i)).bindPopup(sveLokacije[i].name).openPopup();
-                       
+
                         markerOcena.push(markerI);
                         map.addLayer(markerI);
                     }
