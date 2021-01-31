@@ -1,0 +1,105 @@
+﻿<head>
+    <style>
+        .navlist {
+            display: inline-flex;
+            float: right;
+            list-style: none;
+            margin-right: 200px;
+            text-align: center;
+        }
+
+            .navlist li {
+                padding-right: 80px;
+                padding-top: 7px;
+                height: 100%;
+            }
+
+                .navlist li:hover {
+                    background-color: #F7E3DE;
+                    transition: .2s;
+                }
+
+                .navlist li a {
+                    color: black;
+                    text-decoration: none;
+                }
+
+        .nav {
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+            width: 100%;
+            margin-top: 120px;
+            background-color: white;
+            
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            font-family: "Work sans",sans-serif;
+            background-color: white;
+            z-index: 10;
+        }
+        .sort {
+            margin-left: 400px;
+            font-family: "Work Sans",sans-serif;
+        }
+        .submenu {
+            position: absolute;
+            margin-right: 15px;
+            list-style: none;
+            border: 1px solid #f7a193;
+            display: none;
+        }
+
+        .line {
+            border-top: 1px solid black;
+            margin-top: 35px;
+            background-color: white;
+        }
+
+        .loginLabel {
+            float: right;
+            margin-top: 45px;
+            margin-right: 70px;
+            font-size: 16px;
+        }
+
+        .container {
+            position: relative;
+            top: 100px;
+        }
+
+        .subList {
+            list-style: none;
+            display: inline-flex;
+        }
+        .navbardef {
+            z-index: 10;
+        }
+    </style>
+</head>
+    <div class=" navbar">
+        <div class="navbardef">
+            <div class="line">
+                <img style="width:180px;height:180px;position:absolute;top:15px;" src="~/logo_transparent.png" />
+               
+            </div>
+            <div class="nav">
+                <ul class="navlist">
+                    <ul class="navlist">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>
+                            @Html.ActionLink("Hairdressers", "Index", "Hairdressers")
+                          
+                        </li>
+                        <li style="">@Html.ActionLink("Beauty Salons", "Index", "BeautySalons")</li>
+                        <li>@Html.ActionLink("Clothing Shops", "Index", "ClothingShops")</li>
+                        <li>@Html.ActionLink("Fitness Centers", "Index", "FitnessCentres")</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+

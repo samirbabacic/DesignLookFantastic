@@ -1,0 +1,230 @@
+﻿@model IEnumerable<lookFantastic.Models.HairDresser>
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<html>
+<head>
+    <style>
+        body {
+            font-family: "Work Sanse",sans-serif;
+        }
+
+        
+        .shadow {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: black;
+            top: 0;
+            left: 0;
+            z-index: 400;
+        }
+
+        
+
+        .barberList {
+            position: relative;
+            right: 150px;
+            font-family: "Work Sans",sans-serif;
+        }
+
+        .listWrap {
+            padding-top: 15px;
+        }
+
+            .listWrap:hover {
+                background-color: #F7E3DE;
+                transition: .2s;
+            }
+
+       
+
+        
+
+        .column-left {
+            float: right;
+            right: 0;
+        }
+
+        .recommended {
+            border: 1px solid black;
+            width: 500px;
+            height: 450px;
+            border-radius: 12px;
+            position: relative;
+            left: 70px;
+        }
+
+        .imgR {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .imgRec {
+            width: 270px;
+            height: 180px;
+        }
+
+        .name {
+            text-align: center;
+            font-family: "Work Sans",sans-serif;
+        }
+
+        .title {
+            border-bottom: 1px solid black;
+            text-align: center;
+        }
+
+        .review {
+            text-align: center;
+        }
+
+        .promo {
+            font-family: "Work Sans",sans-serif;
+            height: 23px;
+            text-align: center;
+            background-color: #f7a193;
+        }
+
+        h5 {
+            padding-top: 3px;
+        }
+
+        .contact {
+            font-family: "Work Sans",sans-serif;
+        }
+
+        .on {
+            display: normal;
+        }
+
+        .off {
+            display: none;
+        }
+
+        .popup {
+            background-color: white;
+            position: absolute;
+            border: 1px solid black;
+            border-radius: 7px;
+            width: 200px;
+            height: 200px;
+            z-index: 500;
+            margin-top: 200px;
+            margin-left: 1050px;
+        }
+
+        .app1 {
+            border: 1px solid #f7a193;
+            border-radius: 10px;
+            width: 45%;
+            height: 15%;
+            text-align: center;
+            position: relative;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+
+            .app1:hover {
+                background-color: #F7E3DE;
+            }
+
+        .btn1 {
+            background-color: #F7E3DE;
+            border: 1px solid #f7a193;
+            float: right;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="bodyWrap">
+
+        <div class="container">
+            <div class="column-left">
+                <div class="recommended">
+                    <div class="title">
+                        <h3>Recommended</h3>
+                    </div>
+                    <div class="imgR">
+                        <img class="imgRec" src="~/2.jpg" />
+                    </div>
+                    <div class="name">
+                        <h4>Some Advertised Hairdresser</h4>
+                    </div>
+                    <div class="review">
+                        <img style="width:30%" src="~/Screenshot_16.png" />
+                    </div>
+                    <div class="promo">
+                        <h5 style="font-weight:600;">Save up to 5$.Haircut + Shaving for 10$</h5>
+                    </div>
+                    <div class="contact">
+                        <h5 style="padding-left:10px;padding-top:10px;">
+                            Contact:
+                            071/363-877
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="barberWrap">
+
+                <ul style="list-style:none;" class="barberList">
+                    @foreach (var item in Model)
+                    {
+                        <li>
+                            <h5 style="margin-left: 550px; margin-top: 40px; position: absolute;">@item.numbergrades reviews</h5>
+                            <a href="#">
+                                <div class="listWrap" style="border-bottom:1px solid black;width:60%;">
+                                    <ul class="subList">
+                                        <li>
+                                            <div class="imageDiv">
+                                                <img style="width:80px;height:80px;border-radius:12px;position:relative;right:20px;padding-bottom:5px;" src="~/2.jpg" />
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <ul style="list-style:none;position:relative;right:35px;">
+                                                <li style="font-weight:bold">@item.name</li>
+                                                <li>Review Grade: @item.averagegrade</li>
+                                                <li style="">@item.addr_street</li>
+                                                <li style="font-size:12px;font-weight:300">Paris, France</li>
+                                            </ul>
+                                        <li />
+                                    </ul>
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@section scripts
+{
+    <script>
+        shadow = "<div class='shadow'></div>";
+        popup = " <div class='popup'><button class='btn1'>X</button><div id='app' class='app1'><h6>10:00AM</h6></div ><div class='app1'><h6>13:30PM</h6></div><div class='app1'><h6>13:30PM</h6></div></div>"
+        $(document).ready(function () {
+            $(".acc").on("click", function (e) {
+                e.preventDefault();
+                $(shadow).prependTo("body").css({
+                    "opacity": 0.4
+                });
+                $(popup).prependTo("body").css({
+                });
+                $(".btn1").on("click", function (e) {
+                    e.preventDefault
+                    $(".popup").remove();
+                    $(".shadow").remove();
+                });
+            });
+            // on
+        }); // ready
+    </script>
+}
