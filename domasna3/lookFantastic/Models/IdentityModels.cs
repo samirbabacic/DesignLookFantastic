@@ -31,8 +31,6 @@ namespace lookFantastic.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<lookFantastic.Models.FitnessCentres> FitnessCentres { get; set; }
-
-        public System.Data.Entity.DbSet<lookFantastic.Models.BeautySalons> BeautySalons { get; set; }
+     
     }
 }

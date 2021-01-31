@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 
     <style>
-
         body {
             font-family: "Work Sanse",sans-serif;
         }
@@ -15,10 +14,10 @@
             z-index: 1000;
             position: absolute;
             margin-top: 100px;
-            right: -130px;
             font-size: 13px;
             padding-left: 8px;
             font-family: "Work Sans",sans-serif;
+            left: 95%;
         }
 
         #loc {
@@ -29,6 +28,7 @@
             color: black;
             background-color: white;
             opacity: 0.6;
+            position: fixed;
         }
 
         #map {
@@ -41,37 +41,7 @@
             height: 100%;
         }
 
-        .navlist {
-            display: inline-flex;
-            float: right;
-            list-style: none;
-            margin-right: 200px;
-            text-align: center;
-        }
-
-            .navlist li {
-                padding-right: 80px;
-                padding-top: 7px;
-                height: 100%;
-            }
-
-                .navlist li:hover {
-                    background-color: #F7E3DE;
-                    transition: .2s;
-                }
-
-                .navlist li a {
-                    color: black;
-                    text-decoration: none;
-                }
-
-        .nav {
-            border-bottom: 1px solid black;
-            border-top: 1px solid black;
-            width: 100%;
-            margin-top: 120px;
-            background-color: white;
-        }
+        
 
         .shadow {
             width: 100%;
@@ -83,36 +53,7 @@
             z-index: 400;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            font-family: "Work sans",sans-serif;
-            background-color: white;
-            z-index: 10;
-        }
-
-        .submenu {
-            position: absolute;
-            margin-right: 15px;
-            list-style: none;
-            border: 1px solid #f7a193;
-            display: none;
-        }
-
-        .line {
-            border-top: 1px solid black;
-            margin-top: 35px;
-            background-color: white;
-        }
-
-        .loginLabel {
-            float: right;
-            margin-top: 45px;
-            margin-right: 70px;
-            font-size: 16px;
-        }
+       
 
         .container {
             position: relative;
@@ -123,7 +64,6 @@
             list-style: none;
             display: inline-flex;
         }
-
 
         .dialog {
             z-index: 20;
@@ -136,44 +76,18 @@
             margin-top: 230px;
             left: -20px;
         }
-        #dialogOcenivanje
-        {
+
+        #dialogOcenivanje {
             display: none;
         }
-        
+
         .label {
             font-weight: 400;
         }
     </style>
 </head>
 <body>
-    <div class=" navbar">
-        <div class="navbardef">
-            <div class="line">
-                <img style="width:180px;height:180px;position:absolute;top:15px;" src="~/logo_transparent.png" />
-                <div class="loginLabel">
-
-                </div>
-            </div>
-            <div class="nav">
-                <ul class="navlist">
-                    <ul class="navlist">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>
-                            @Html.ActionLink("Hairdressers", "Index", "Hairdressers")
-                            <ul id="sub" class="submenu">
-                                <li>Male</li>
-                                <li>Female</li>
-                            </ul>
-                        </li>
-                        <li style="">@Html.ActionLink("Beauty Salons", "Index", "BeautySalons")</li>
-                        <li>@Html.ActionLink("Clothing Shops", "Index", "ClothingShops")</li>
-                        <li>@Html.ActionLink("Fitness Centers", "Index", "FitnessCentres")</li>
-                    </ul>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
     <div class="location" style="">
         <button id="loc" href="" style="">Show my location</button>
     </div>
@@ -242,27 +156,21 @@
 
 
         <script>
-
             $(document).ready(function () {
                 $('#dialogOcenivanje').dialog({
                     modal: true,
                     autoOpen: false,
                     resizable: false,
                     height: 500,
-
                 });
-                
+
             });
-
             var map = L.map('map').setView({ lon: 2.5749, lat: 48.8358 }, 10);
-
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
             }).addTo(map);
-
             L.control.scale().addTo(map);
-
             var markBerberi = function () {
                 var tmp = null;
                 $.ajax({
@@ -272,14 +180,11 @@
                     data: "{}",
                     success: function (data) {
                         tmp = data;
-
                     }
                 });
                 return tmp;
             }();
-
             $('#btnReview').on('click', function () {
-
                 var tip = $('#tip').html();
                 var idL = $('#idLokacija').html();
                 var comment = $('#komentar').val();
@@ -317,7 +222,6 @@
                         });
                         return tmp;
                     }();
-
                     var selektirana = $('#dropdownOcena option:selected').val();
                     var review = {
                         id: idN,
@@ -333,7 +237,6 @@
                     avg = avg + parseInt(selektirana);
                     avg = avg / markButik.numbergrades;
                     markButik.averagegrade = avg;
-
                     $.ajax({
                         url: '/api/ClothingShops/' + idL,
                         type: 'PUT',
@@ -350,13 +253,10 @@
                                     alert("You successfully reviewed the location")
                                 }
                             });
-
                         }
                     });
-
                 }
                 else if (tip == 'F') {
-
                     var markTeretana = function () {
                         var tmp = null;
                         $.ajax({
@@ -370,7 +270,6 @@
                         });
                         return tmp;
                     }();
-
                     var selektirana = $('#dropdownOcena option:selected').val();
                     markTeretana.numbergrades = markTeretana.numbergrades + 1;
                     var avg = (markTeretana.averagegrade * (markTeretana.numbergrades - 1));
@@ -403,7 +302,6 @@
                     });
                 }
                 else if (tip == 'H') {
-
                     var markFrizer = function () {
                         var tmp = null;
                         $.ajax({
@@ -417,7 +315,6 @@
                         });
                         return tmp;
                     }();
-
                     var selektirana = $('#dropdownOcena option:selected').val();
                     markFrizer.numbergrades = markFrizer.numbergrades + 1;
                     var avg = (markFrizer.averagegrade * (markFrizer.numbergrades - 1));
@@ -450,7 +347,6 @@
                     });
                 }
                 else if (tip == 'B') {
-
                     var beautySalon = function () {
                         var tmp = null;
                         $.ajax({
@@ -464,7 +360,6 @@
                         });
                         return tmp;
                     }();
-
                     var selektirana = $('#dropdownOcena option:selected').val();
                     beautySalon.numbergrades = beautySalon.numbergrades + 1;
                     var avg = (beautySalon.averagegrade * (beautySalon.numbergrades - 1));
@@ -545,7 +440,7 @@
                 }
             }
             function findTeretana(i) {
-                
+
                 return function () {
                     var idM = markTeretani[i].id;
                     $('#selectDialog').dialog({
@@ -585,15 +480,14 @@
                                     }
                                 }
                                 $('#dialogKomentari').dialog({
-                                    autoOpen:true
+                                    autoOpen: true
                                 });
                             }
                         }
-                    });         
+                    });
                 }
             }
             function findSaloni(i) {
-
                 return function () {
                     var idM = markSaloni[i].id;
                     $('#selectDialog').dialog({
@@ -689,12 +583,11 @@
             }
             function findSve(i) {
                 return function () {
-                    
+
                     $('#idLokacija').html(sveLokacije[i].id)
                     console.log(sveLokacije[i].Tip);
                     $('#tip').html(sveLokacije[i].Tip);
                     var idM = sveLokacije[i].id;
-
                     var tip = sveLokacije[i].Tip;
                     if (tip === 'H') {
                         $('#selectDialog').dialog({
@@ -739,7 +632,6 @@
                                 }
                             }
                         });
-
                     }
                     else if (tip === 'S') {
                         $('#selectDialog').dialog({
@@ -870,7 +762,7 @@
                                     });
                                 }
                             }
-                        });         
+                        });
                     }
                 }
             }
@@ -882,7 +774,6 @@
             $("#Berberi").change(function () {
                 if (this.checked) {
                     for (var i = 0; i < 100; i++) {
-
                         map.addLayer(markeriBerberi[i]);
                     }
                 }
@@ -892,7 +783,6 @@
                     }
                 }
             });
-
             var markTeretani = function () {
                 var tmp = null;
                 $.ajax({
@@ -902,7 +792,6 @@
                     data: "{}",
                     success: function (data) {
                         tmp = data;
-
                     }
                 });
                 return tmp;
@@ -915,7 +804,6 @@
             $("#Teretani").change(function () {
                 if (this.checked) {
                     for (var i = 0; i < 100; i++) {
-
                         map.addLayer(markeriTeretani[i]);
                     }
                 }
@@ -925,8 +813,6 @@
                     }
                 }
             });
-
-
             var markSaloni = function () {
                 var tmp = null;
                 $.ajax({
@@ -936,7 +822,6 @@
                     data: "{}",
                     success: function (data) {
                         tmp = data;
-
                     }
                 });
                 return tmp;
@@ -949,7 +834,6 @@
             $("#SaloniZaUbavina").change(function () {
                 if (this.checked) {
                     for (var i = 0; i < 100; i++) {
-
                         map.addLayer(markeriSaloni[i]);
                     }
                 }
@@ -959,8 +843,6 @@
                     }
                 }
             });
-
-
             var markButici = function () {
                 var tmp = null;
                 $.ajax({
@@ -970,7 +852,6 @@
                     data: "{}",
                     success: function (data) {
                         tmp = data;
-
                     }
                 });
                 return tmp;
@@ -983,7 +864,6 @@
             $("#Butici").change(function () {
                 if (this.checked) {
                     for (var i = 0; i < 100; i++) {
-
                         map.addLayer(markeriButici[i]);
                     }
                 }
@@ -1011,11 +891,8 @@
                         markerIme.push(markerI);
                         map.addLayer(markerI);
                     }
-
                 }
-
             });
-
             var markerOcena = [];
             $("#dropL").change(function () {
                 if (typeof markerOcena != 'undefined') {
@@ -1034,11 +911,9 @@
                 for (var i = 0; i < sveLokacije.length; i++) {
                     if (sveLokacije[i].averagegrade > ocena - 1 && sveLokacije[i].averagegrade <= ocena) {
                         var markerI = new L.marker([sveLokacije[i].lat, sveLokacije[i].lon]).on('click', findSve(i)).bindPopup(sveLokacije[i].name).openPopup();
-
                         markerOcena.push(markerI);
                         map.addLayer(markerI);
                     }
-
                 }
             });
             $("#loc").on("click", function () {
